@@ -15,6 +15,11 @@ const temp = document.querySelector('.temp');
 const deactivationPlayer = () => {
     playrBtn.forEach(item => item.classList.remove('active'));
     playerBlock.forEach(item => item.classList.remove('active'));
+    musicPlayerInit.stop();
+    radioPlayerInit.stop();
+    videoPlayerInit.stop();
+    
+
 }
 
 //обработчик события на каждую кнопку вызывает функцию и деалет активным выделенный блок

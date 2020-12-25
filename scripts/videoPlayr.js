@@ -1,5 +1,7 @@
+import { addZero } from './scriptSupport.js'
+
 export const videoPlayerInit = () => {
-    console.log('video');
+   
     // создаем переменные константы
 const videoPlayer = document.querySelector('.video-player');
 const videoButtonPlay = document.querySelector('.video-button__play');
@@ -7,6 +9,10 @@ const videoButtonStop = document.querySelector('.video-button__stop');
 const videoProgress = document.querySelector('.video-progress'); 
 const videoTimePassed = document.querySelector('.video-time__passed');
 const videoTimeTotal = document.querySelector('.video-time__total'); 
+const videoVolume = document.querySelector('.video-volum');
+const videoFullscreen = document.querySelector('.video-fullscreen');
+const volumeOff = document.querySelector('.of-icon');
+
 
 // функции
 
@@ -22,7 +28,8 @@ const toggleIcon = () => {
 };
 
 // Функция запуска и паузы видео
-const togglePlay = () => {
+const togglePlay = (event) => {
+    event.preventDefault()
     if(videoPlayer.paused){
         videoPlayer.play();
     } else {
@@ -36,10 +43,11 @@ const stopPlay = () => {
     videoPlayer.currentTime = 0;
 };
 
-// функция добовления 0 к однозначным числам
-const addZero = n => n < 10 ? '0'+n : n;
 
-
+const changeValue = () => {
+        const valueVolume = videoVolume.value;
+        videoPlayer.volume = valueVolume / 100;
+}
 
 
 // Обработчики событий
@@ -71,12 +79,43 @@ videoPlayer.addEventListener('timeupdate', () => {
     videoTimePassed.textContent = `${addZero(minutePassed)}:${addZero(secondsPassed)}`;//вывод времени на плеер(конец)
 });
 //событие смены прогресса 
-videoProgress.addEventListener('change',() => {
+videoProgress.addEventListener('input',() => {
     const duration = videoPlayer.duration;
     const value = videoProgress.value;//значение прогресса
 
     videoPlayer.currentTime = (value * duration) / 100;//установка прогресса
 });
+
+videoVolume.addEventListener('input', changeValue);
+
+videoFullscreen.addEventListener('click', () => {
+    videoPlayer.requestFullscreen()
+});
+videoPlayer.addEventListener('volumechange', () => {
+    videoVolume.value = Math.round(videoPlayer.volume * 100);
+});
+
+
+volumeOff.addEventListener('click', () => {
+    console.dir(videoPlayer);
+    if(videoPlayer.muted){
+        videoPlayer.muted = false
+    } else videoPlayer.muted = true
+});
+
+
+changeValue();
+
+
+
+
+videoPlayerInit.stop= () => {
+    videoPlayer.pause();
+    toggleIcon();
+};
+
+
+
 
 
 }
